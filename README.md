@@ -1,21 +1,17 @@
 IC2 OLED controller for Raspberry PI
 =======================
+
 Fixes by Mipsmonsta
+=======================
 Bug fix: Fixed 'no textsize attribute for ImageDraw' - use textlength instead.
 Bug fix: Show load using top through correction of awk syntax.
 Bug fix: Added "Up: " prefix for cpu screen.
 
-=======================
+
 Python library to enable 128x32 pixel OLED for Raspberry Pi (both 32 and 64bit).
 
 This repository has been broken out to work as a standalone service and will work on a standard Raspberry Pi running Raspian.
 
-<a href="https://www.buymeacoffee.com/jedimeat" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
-
-[![release][release-badge]][release-url]
-![downloads][downloads-badge]
-<br>
-<br>
 
 ## Some Teaser Screenshots.
 | Welcome | HA Splash | CPU Stats | RAM Stats | Storage Stats | Network Stats | Exit Screen | 
