@@ -302,6 +302,20 @@ class NetworkScreen(BaseScreen):
 
         time.sleep(self.duration)
 
+class TimeScreen(BaseScreen):
+    img = Image.open(r"" + Utils.current_dir + "/img/time_xs.png")
+
+    def render(self):
+
+        # Resize and merge icon to Canvas
+        icon = self.img.resize((24, 24))
+        self.display.image.paste(icon, (2, 5))
+        
+        self.display.draw.text((35, 11), "Time: " + time.strftime("%H:%M:%S", time.localtime()), font=self.font(12), fill=255)
+        self.capture_screenshot()
+        self.display.show()
+        time.sleep(self.duration)
+
 class StorageScreen(BaseScreen):
     img = Image.open(r"" + Utils.current_dir + "/img/harddisk.png") 
 

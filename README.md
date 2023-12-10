@@ -6,6 +6,7 @@ Fixes by Mipsmonsta
 Bug fix: Fixed 'no textsize attribute for ImageDraw' - use textlength instead.
 Bug fix: Show load using top through correction of awk syntax.
 Bug fix: Added "Up: " prefix for cpu screen.
+Feature: Added Time Screen.
 
 
 Python library to enable 128x32 pixel OLED for Raspberry Pi (both 32 and 64bit).

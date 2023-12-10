@@ -11,10 +11,12 @@ class Config:
         'welcome',
         'splash',
         'network',
+        'time',
         'storage',
         'memory',
         'cpu',
         'static'
+        
     ]
     HASSIO_DEPENDENT_SCREENS = [
         'Splash'
