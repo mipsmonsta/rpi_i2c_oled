@@ -282,6 +282,39 @@ class SplashScreen(BaseScreen):
         self.display.show()
         time.sleep(self.duration)
 
+class CputempScreen(BaseScreen):
+    img = Image.open(r"" + Utils.current_dir + "/img/temperature.png") 
+
+    def set_temp_unit(self, unit):
+        unit = str(unit).upper()
+        if unit in ['C', 'F']:
+            self.temp_unit = unit
+
+    def get_temp(self):
+        temp =  float(Utils.shell_cmd("cat /sys/class/thermal/thermal_zone0/temp")) / 1000.00
+
+        if (hasattr(self, 'temp_unit') and self.temp_unit == 'F'):
+            temp = "%0.1f °F " % (temp * 9.0 / 5.0 + 32)
+        else:
+            temp = "%0.1f °C " % (temp)
+
+        return temp
+
+    def render(self):
+        # Check temapture unit and convert if required.
+        temp = self.get_temp()
+
+        # Resize and merge icon to Canvas
+        icon = self.img.resize([20,20])  
+        self.display.image.paste(icon,(2,5))
+
+        self.display.draw.text((35, 11), 'TEMP: ' + temp, font=self.font(10), fill=255)
+
+        self.capture_screenshot()
+        
+        self.display.show()
+        time.sleep(self.duration)
+
 class NetworkScreen(BaseScreen):
     img = Image.open(r"" + Utils.current_dir + "/img/ip-network.png")
 
@@ -343,7 +376,7 @@ class MemoryScreen(BaseScreen):
         mem = mem.split(',')
 
         # Resize and merge icon to Canvas
-        icon = self.img.resize([26,26])  
+        icon = self.img.resize([22,26])  
         self.display.image.paste(icon,(-2,3))
 
         self.display.draw.text((29, 0), "USED: " + mem[0] + ' GB \n', font=self.font(8), fill=255)
@@ -391,3 +424,5 @@ class CpuScreen(BaseScreen):
         
         self.display.show()
         time.sleep(self.duration)
+
+

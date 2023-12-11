@@ -10,13 +10,14 @@ class Config:
     SUPPORTED_SCREENS = [
         'welcome',
         'splash',
+        'cputemp', 
         'network',
         'time',
         'storage',
         'memory',
         'cpu',
         'static'
-        
+             
     ]
     HASSIO_DEPENDENT_SCREENS = [
         'Splash'
@@ -225,6 +226,9 @@ class Config:
             screen = globals()[class_name](duration, self.display, self.utils, self)
 
             if name == 'cpu':
+                screen.set_temp_unit(self.get_option_value('temp_unit'))
+
+            if name == 'cputemp':
                 screen.set_temp_unit(self.get_option_value('temp_unit'))
 
             if name == 'welcome':

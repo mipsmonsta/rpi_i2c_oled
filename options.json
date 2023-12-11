@@ -7,14 +7,22 @@
     "graceful_exit_text": "Exited at {datetime}",
     "Scroll_Amplitude": 6,
 
-    "Show_Welcome_Screen": false,
-    "Welcome_Screen_Limit": 5,
+    "Show_Welcome_Screen": true,
+    "Welcome_Screen_Limit": 1,
     "Welcome_Screen_Duration": null,
     "Welcome_Screen_Text": "Welcome to {hostname}",
     
     "Show_Splash_Screen": false,
     "Splash_Screen_Limit": null,
     "Splash_Screen_Duration": null,
+
+    "Show_CPUTemp_Screen": true,
+    "CPUTemp_Screen_Limit": null,
+    "CPUTemp_Screen_Duration": 5,
+
+    "Show_Time_Screen": true,
+    "Time_Screen_Limit": null,
+    "Time_Screen_Duration": 5,
     
     "Show_Memory_Screen": true,
     "Memory_Screen_Limit": null,
@@ -31,10 +39,6 @@
     "Show_CPU_Screen": true,
     "CPU_Screen_Limit": null,
     "CPU_Screen_Duration": 5,
-
-    "Show_Time_Screen": true,
-    "Time_Screen_Limit": null,
-    "Time_Screen_Duration": 5,
 
     "Show_Static_Screen": false,
     "Static_Screen_Limit": null,
