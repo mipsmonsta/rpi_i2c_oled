@@ -51,13 +51,12 @@ The following variables are supported
 | {hassio.info.property} | Fetches a specified property from Home Assistants supervisor API (e.g. http://supervisor/os/info). You can state the namespace and property which will populate with the responding value. This must be fixed with hassio first, followed by the namespace (e.g. os, network etc), then the property e.g. hassio.os.latest_version will call http://supervisor/os/info and display the ```latest_version``` value. |
 
 <br>
-<br>
 
 ## Button to freeze screen.
 
 Hock up your push button to GPIO15, with resistor of 100 ohm to 200 ohm in series with 3.3v and the other end to GPIO15 (BCM pin) i.e. Board pin 10.
 
-When activated, the current screen will keep rendering in a loop, effectively frozen. However none that is the screen is config with limited number of display, the next screen will be frozen instead.
+When activated, the current screen will keep rendering in a loop, effectively frozen. However note that if the screen is config with limited number of display, the next screen will be frozen instead.
 
 Adafruit Python SSD1306
 =======================
