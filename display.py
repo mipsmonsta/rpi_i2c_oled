@@ -67,7 +67,7 @@ def start(config, logger):
                     screen.run()
                     config.reduce_screen_limit(name)
                     while IS_SCREEN_FROZEN and config.allow_screen_render(name):
-                        screen.run()
+                        screen.run(frozen=True)
                     config.reduce_screen_limit(name)
                                        
                 except Exception as e:

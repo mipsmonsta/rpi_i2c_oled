@@ -50,6 +50,14 @@ class Display:
             self.logger.info("saving screenshot to '" + path + "'")
             self.image.save(path)
 
+    def draw_white_top_right_triange(self):
+        # define the coordinates of the triangle vertices
+        triangle_vertices = [(0, 0), 
+                             (self.width // 22, 0), 
+                             (0, self.height // 10)]
+
+        self.draw.polygon(triangle_vertices, fill="white")
+
 class BaseScreen:
     font_path = Utils.current_dir + "/fonts/DejaVuSans.ttf"
     font_bold_path = Utils.current_dir + "/fonts/DejaVuSans-Bold.ttf"
@@ -92,7 +100,9 @@ class BaseScreen:
     def default_message(self):
         return 'Welcome to ' + self.utils.get_hostname()
 
-    def render(self):
+    def render(self, frozen = False):
+        if frozen:
+            self.display.draw_white_top_right_triange()
         self.display.show()
 
     def render_scroller(self, text, font, amplitude = 0, startpos = None):
@@ -111,10 +121,10 @@ class BaseScreen:
             if not self.config.allow_screen_render(self.name) or not scroller.move_for_next_frame(time.time() < timer):
                 break
 
-    def run(self):
+    def run(self, frozen = False):
         self.logger.info("'" + self.__class__.__name__ + "' rendering")
         self.display.prepare()
-        self.render()
+        self.render(frozen = frozen)
         self.logger.info("'" + self.__class__.__name__ + "' completed")
 
 class StaticScreen(BaseScreen):
@@ -163,11 +173,14 @@ class StaticScreen(BaseScreen):
         slug = Utils.slugify(self.text)
         super().capture_screenshot("static_" + slug)
 
-    def render(self):
+    def render(self, frozen=False):
         self.display.prepare()
         font = self.font(16)
         text = self.text
         # amplitude = self.amplitude
+
+        if frozen:
+            self.display.draw_white_top_right_triange()
 
         self.logger.info("Rendering static text: " + text)
         if not self.noscroll and Utils.requires_scroller(self.display, text, font):
@@ -197,7 +210,7 @@ class StaticScreen(BaseScreen):
             else:
                 x, y = Utils.get_text_center(self.display, text, font)
                 self.display.draw.text((x, y), self.text, font=font, fill=255)
-
+        
             self.display.show()
             self.capture_screenshot()
             time.sleep(self.duration)
@@ -222,13 +235,17 @@ class WelcomeScreen(BaseScreen):
         self._text_compiled = False
         self.logger.info("Welcome screen text: '" + self._text + "' added")
 
-    def render(self):
+    def render(self, frozen=False):
         '''
         Animated welcome screen
         Scrolls 'Welcome [hostname]' across the screen
         '''
         height = self.display.height
         font = self.font(16)
+
+        if frozen:
+            self.display.draw_white_top_right_triange()
+
         self.render_scroller(self.text, font)
 
 class SplashScreen(BaseScreen):
@@ -237,7 +254,7 @@ class SplashScreen(BaseScreen):
     def __init__(self, duration, display = Display(), utils = Utils(), config = None):
         super().__init__(duration, display, utils, config)
 
-    def render(self):
+    def render(self, frozen=False):
         '''
             Home Assistant screen. 
             If you're not using Home Assistant OS, disable this screen in the config
@@ -276,6 +293,9 @@ class SplashScreen(BaseScreen):
         ln2_font = self.font(8)
         self.display.draw.text((textbox_x, 20), ln2, font=ln2_font, fill=255)
 
+        if frozen:
+            self.display.draw_white_top_right_triange()
+
         # Display Image to OLED
         self.capture_screenshot()
 
@@ -300,9 +320,12 @@ class CputempScreen(BaseScreen):
 
         return temp
 
-    def render(self):
+    def render(self, frozen=False):
         # Check temapture unit and convert if required.
         temp = self.get_temp()
+
+        if frozen:
+            self.display.draw_white_top_right_triange()
 
         # Resize and merge icon to Canvas
         icon = self.img.resize([20,20])  
@@ -318,9 +341,12 @@ class CputempScreen(BaseScreen):
 class NetworkScreen(BaseScreen):
     img = Image.open(r"" + Utils.current_dir + "/img/ip-network.png")
 
-    def render(self):
+    def render(self, frozen=False):
         hostname = self.utils.get_hostname()
         ipv4 = self.utils.get_ip()
+
+        if frozen:
+            self.display.draw_white_top_right_triange()
 
         # Resize and merge icon to Canvas
         icon = self.img.resize([13,13])
@@ -338,7 +364,10 @@ class NetworkScreen(BaseScreen):
 class TimeScreen(BaseScreen):
     img = Image.open(r"" + Utils.current_dir + "/img/time_xs.png")
 
-    def render(self):
+    def render(self, frozen=False):
+
+        if frozen:
+            self.display.draw_white_top_right_triange()
 
         # Resize and merge icon to Canvas
         icon = self.img.resize((24, 24))
@@ -352,9 +381,12 @@ class TimeScreen(BaseScreen):
 class StorageScreen(BaseScreen):
     img = Image.open(r"" + Utils.current_dir + "/img/harddisk.png") 
 
-    def render(self):
+    def render(self, frozen=False):
         storage =  Utils.shell_cmd('df -h | awk \'$NF=="/"{printf "%d,%d,%s", $3,$2,$5}\'')
         storage = storage.split(',')
+
+        if frozen:
+            self.display.draw_white_top_right_triange()
 
         # Resize and merge icon to Canvas
         icon = self.img.resize([26,26])  
@@ -371,9 +403,12 @@ class StorageScreen(BaseScreen):
 class MemoryScreen(BaseScreen):
     img = Image.open(r"" + Utils.current_dir + "/img/database.png")
 
-    def render(self):
+    def render(self, frozen=False):
         mem = Utils.shell_cmd("free -m | awk 'NR==2{printf \"%.1f,%.1f,%.0f%%\", $3/1000,$2/1000,$3*100/$2 }'")
         mem = mem.split(',')
+
+        if frozen:
+            self.display.draw_white_top_right_triange()
 
         # Resize and merge icon to Canvas
         icon = self.img.resize([22,26])  
@@ -405,12 +440,15 @@ class CpuScreen(BaseScreen):
 
         return temp
 
-    def render(self):
+    def render(self, frozen=False):
         cpu = Utils.shell_cmd("top -bn1 | grep load | awk '{printf (\"%.2f\", $(NF-2))}'")
         uptime = Utils.shell_cmd("uptime | grep -ohe 'up .*' | sed 's/,//g' | awk '{ print $2" "$3 }'")
 
         # Check temapture unit and convert if required.
         temp = self.get_temp()
+
+        if frozen:
+            self.display.draw_white_top_right_triange()
 
         # Resize and merge icon to Canvas
         icon = self.img.resize([26,26])  
