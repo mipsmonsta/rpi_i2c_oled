@@ -1,18 +1,26 @@
 IC2 OLED controller for Raspberry PI
 =======================
 
-Fixes by Mipsmonsta
+Fixes by Mipsmonsta (December 2023)
 =======================
 
 Bug fix: Fixed 'no textsize attribute for ImageDraw' - use textlength instead.
+
 Bug fix: Show load using top through correction of awk syntax.
+
 Bug fix: Added "Up: " prefix for cpu screen.
+
 Feature: Added Time Screen.
+
 Feature: Added CPU Temperature Screen.
+
+Feature: Added GPIO button freeze. 
 
 Python library to enable 128x32 pixel OLED for Raspberry Pi (both 32 and 64bit).
 
-This repository has been broken out to work as a standalone service and will work on a standard Raspberry Pi running Raspian.
+This repository has been broken out to work as a standalone service and will work on a standard Raspberry Pi running Raspian or Ubuntu. 
+
+Code was tested on a Ubuntu 23.10 using a raspberry pi.
 
 
 ## Some Teaser Screenshots.
@@ -44,6 +52,12 @@ The following variables are supported
 
 <br>
 <br>
+
+## Button to freeze screen.
+
+Hock up your push button to GPIO15, with resistor of 100 ohm to 200 ohm in series with 3.3v and the other end to GPIO15 (BCM pin) i.e. Board pin 10.
+
+When activated, the current screen will keep rendering in a loop, effectively frozen. However none that is the screen is config with limited number of display, the next screen will be frozen instead.
 
 Adafruit Python SSD1306
 =======================

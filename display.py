@@ -2,11 +2,28 @@ import sys
 import getopt
 import os
 import logging
+
 from bin.Config import Config
 from bin.Utils import Utils
 from bin.Screens import Display
 
+from gpiozero import Button
+
 LOG_LEVEL = logging.WARNING
+
+# Set-up button to freeze screen
+PIN_FREEZE = 15 # GPIO15 BCM pin number (not the physical board numbering)
+IS_SCREEN_FROZEN = False
+
+def toggle_freeze_current_screen():
+    global IS_SCREEN_FROZEN
+
+    IS_SCREEN_FROZEN = not IS_SCREEN_FROZEN
+    logger.info(f"Screen freeze: {IS_SCREEN_FROZEN}")    
+    return
+
+
+
 
 def print_help():
     filename = os.path.basename(__file__)
@@ -41,6 +58,7 @@ def start(config, logger):
     config.enable_graceful_exit()
 
     while config.allow_master_render:
+
         for name in screens:
             if config.allow_screen_render(name):
                 logger.info("'" + name + "' is being processed")
@@ -48,9 +66,15 @@ def start(config, logger):
                     screen = config.screen_factory(name)
                     screen.run()
                     config.reduce_screen_limit(name)
+                    while IS_SCREEN_FROZEN and config.allow_screen_render(name):
+                        screen.run()
+                    config.reduce_screen_limit(name)
+                                       
                 except Exception as e:
                     logger.critical("Screen '" + name + "' has an internal error: " + str(e))
                     continue
+                except KeyboardInterrupt:
+                    break
 
 def set_logging_level(level):
     logging.basicConfig()
@@ -101,4 +125,12 @@ if __name__ == "__main__":
         logger.critical("No options.json file available.")
         sys.exit(2)
 
+    # setup buttons if any
+    # pause button
+
+    pauseButton = Button(PIN_FREEZE, pull_up=False)
+    pauseButton.when_pressed = toggle_freeze_current_screen
     start(config, logger)
+    
+
+    
